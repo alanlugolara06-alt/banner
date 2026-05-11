@@ -188,7 +188,8 @@ const sizes = {
   "tw-header":   { width: 1500, height: 500,  align: "center", label: "twitter-header" },
   "tiktok":      { width: 1080, height: 1920, align: "center", label: "tiktok" },
   "yt-thumb":    { width: 1280, height: 720,  align: "center", label: "youtube-thumb" },
-  "wsp-status":  { width: 1080, height: 1920, align: "center", label: "whatsapp-status" },
+  "wsp-status":  { width: 1080, height: 1920, align: "center", label: "whatsapp-story" },
+  "wsp-business":{ width: 500,  height: 500,  align: "center", label: "whatsapp-business" },
   "linkedin":    { width: 1200, height: 627,  align: "center", label: "linkedin" },
   "web":         { width: 1200, height: 300,  align: "left",   label: "web-banner" }
 };
