@@ -106,6 +106,40 @@ for (const id of fields) {
   el.addEventListener("change", render);
 }
 
+const presets = {
+  ma: {
+    bgColor: "#000000", bgColor2: "#84cc16",
+    textColor: "#ffffff", buttonColor: "#84cc16", buttonTextColor: "#000000",
+    title: "M&A Market Store",
+    subtitle: "Minimarket · Cigarrillos electrónicos · Bebidas · Snacks",
+    buttonText: "Visitar tienda"
+  },
+  neon: {
+    bgColor: "#0f172a", bgColor2: "#22d3ee",
+    textColor: "#ffffff", buttonColor: "#f472b6", buttonTextColor: "#0f172a"
+  },
+  fire: {
+    bgColor: "#dc2626", bgColor2: "#facc15",
+    textColor: "#ffffff", buttonColor: "#000000", buttonTextColor: "#ffffff"
+  },
+  ocean: {
+    bgColor: "#0284c7", bgColor2: "#a3e635",
+    textColor: "#ffffff", buttonColor: "#fef08a", buttonTextColor: "#0c4a6e"
+  }
+};
+
+document.querySelectorAll(".preset").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const p = presets[btn.dataset.preset];
+    if (!p) return;
+    for (const [k, val] of Object.entries(p)) {
+      const el = document.getElementById(k);
+      if (el) el.value = val;
+    }
+    render();
+  });
+});
+
 copyBtn.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(output.value);

@@ -41,6 +41,26 @@ body {
   font-size: 1.1rem;
 }
 
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+}
+.presets strong { width: 100%; margin-bottom: 4px; color: #374151; }
+.preset {
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.preset:hover { background: #84cc16; color: #000; }
+
 .editor label {
   display: block;
   font-size: 0.85rem;
