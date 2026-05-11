@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Generador de Banners</title>
+<title>Generador de Banners — M&A Market Store</title>
 <link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 <header class="topbar">
   <h1>Generador de Banners</h1>
-  <p>Edita el banner en vivo. El link es clickeable, no se genera PNG.</p>
+  <p>Diseña el banner, descárgalo como imagen para redes sociales o copia el HTML clickeable para tu web.</p>
 </header>
 
 <main class="layout">
@@ -17,11 +18,20 @@
     <h2>Editor</h2>
 
     <div class="presets">
-      <strong>Presets:</strong>
+      <strong>Estilos:</strong>
       <button type="button" class="preset" data-preset="ma">M&amp;A Market</button>
       <button type="button" class="preset" data-preset="neon">Neón</button>
       <button type="button" class="preset" data-preset="fire">Fuego</button>
       <button type="button" class="preset" data-preset="ocean">Océano</button>
+    </div>
+
+    <div class="presets">
+      <strong>Formato para redes:</strong>
+      <button type="button" class="preset" data-size="ig-post">Instagram Post (1080×1080)</button>
+      <button type="button" class="preset" data-size="ig-story">Instagram Story (1080×1920)</button>
+      <button type="button" class="preset" data-size="fb-post">Facebook (1200×630)</button>
+      <button type="button" class="preset" data-size="tw-header">Twitter/X (1500×500)</button>
+      <button type="button" class="preset" data-size="web">Web (1200×300)</button>
     </div>
 
     <label>Título
@@ -32,12 +42,16 @@
       <input type="text" id="subtitle" value="Minimarket · Cigarrillos electrónicos · Bebidas · Snacks" />
     </label>
 
-    <label>Texto del botón
-      <input type="text" id="buttonText" value="Visitar tienda" />
+    <label>Texto del botón / llamada a la acción
+      <input type="text" id="buttonText" value="Visitá nuestra tienda" />
     </label>
 
-    <label>Link (URL a la que lleva el banner)
-      <input type="url" id="link" value="https://example.com" placeholder="https://..." />
+    <label>Sitio web de tu empresa (se muestra en el banner)
+      <input type="url" id="website" value="www.mamarketstore.com" placeholder="www.tu-empresa.com" />
+    </label>
+
+    <label>Link de destino (al hacer click en versión web)
+      <input type="url" id="link" value="https://www.mamarketstore.com" placeholder="https://..." />
     </label>
 
     <label>Color de fondo
@@ -72,33 +86,60 @@
       </select>
     </label>
 
-    <label>Alto del banner (px)
-      <input type="number" id="height" value="220" min="80" max="600" />
+    <label>Ancho (px)
+      <input type="number" id="width" value="1200" min="200" max="2400" />
+    </label>
+
+    <label>Alto (px)
+      <input type="number" id="height" value="300" min="80" max="2400" />
     </label>
 
     <label>Radio de bordes (px)
-      <input type="number" id="radius" value="16" min="0" max="60" />
+      <input type="number" id="radius" value="16" min="0" max="80" />
     </label>
 
     <label class="checkbox">
       <input type="checkbox" id="openNewTab" checked />
-      Abrir link en nueva pestaña
+      Abrir link en nueva pestaña (solo versión web)
+    </label>
+
+    <label class="checkbox">
+      <input type="checkbox" id="showWebsite" checked />
+      Mostrar URL del sitio web en el banner
     </label>
   </section>
 
   <section class="preview-area">
-    <h2>Vista previa (click en el banner para ir al link)</h2>
-    <div id="preview"></div>
+    <h2>Vista previa</h2>
+    <p class="hint">En la web el banner es clickeable. En redes sociales subes la imagen y la URL queda visible para que la escriban en el navegador.</p>
+    <div class="preview-wrapper">
+      <div id="preview"></div>
+    </div>
 
-    <h2>Código HTML (cópialo y pégalo donde quieras)</h2>
-    <textarea id="output" readonly rows="10"></textarea>
-    <button id="copyBtn" type="button">Copiar HTML</button>
-    <span id="copyStatus" class="status"></span>
+    <div class="actions">
+      <button id="downloadBtn" type="button" class="primary">📥 Descargar PNG (para redes)</button>
+      <button id="copyBtn" type="button">📋 Copiar HTML (para web)</button>
+      <span id="status" class="status"></span>
+    </div>
+
+    <details>
+      <summary>Ver código HTML embebible</summary>
+      <textarea id="output" readonly rows="10"></textarea>
+    </details>
+
+    <div class="tips">
+      <h3>Cómo usarlo</h3>
+      <ul>
+        <li><strong>Instagram / Facebook / TikTok:</strong> descarga el PNG, súbelo como publicación y pon el link de tu web en la bio o en la descripción.</li>
+        <li><strong>Instagram Stories:</strong> usa el formato 1080×1920 y agrega un sticker de link al sitio.</li>
+        <li><strong>Web / blog / email:</strong> copia el HTML y pégalo; el banner será clickeable y llevará a tu URL.</li>
+      </ul>
+    </div>
   </section>
 </main>
 
 <footer class="footer">
-  <small>Generado en el navegador. Sin PNG: el banner es HTML y el link es clickeable.</small>
+  <small>Generador de banners — exporta PNG para redes sociales o HTML clickeable para tu web.</small>
 </footer>
 
 <script src="script.js"></script>

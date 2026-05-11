@@ -1,13 +1,14 @@
 const fields = [
-  "title", "subtitle", "buttonText", "link",
+  "title", "subtitle", "buttonText", "link", "website",
   "bgColor", "bgColor2", "textColor", "buttonColor", "buttonTextColor",
-  "imageUrl", "align", "height", "radius", "openNewTab"
+  "imageUrl", "align", "width", "height", "radius", "openNewTab", "showWebsite"
 ];
 
 const preview = document.getElementById("preview");
 const output = document.getElementById("output");
 const copyBtn = document.getElementById("copyBtn");
-const copyStatus = document.getElementById("copyStatus");
+const downloadBtn = document.getElementById("downloadBtn");
+const statusEl = document.getElementById("status");
 
 function escapeHtml(str) {
   return String(str)
@@ -16,10 +17,6 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-function escapeAttr(str) {
-  return escapeHtml(str);
 }
 
 function getValues() {
@@ -31,73 +28,90 @@ function getValues() {
   return v;
 }
 
-function buildBannerHtml(v) {
-  const align = ["left", "center", "right"].includes(v.align) ? v.align : "center";
-  const height = parseInt(v.height, 10) || 220;
+function buildBannerStyles(v) {
+  const width = parseInt(v.width, 10) || 1200;
+  const height = parseInt(v.height, 10) || 300;
   const radius = parseInt(v.radius, 10) || 0;
+  const align = ["left", "center", "right"].includes(v.align) ? v.align : "center";
 
-  const bg = v.bgColor2 && v.bgColor2 !== v.bgColor
+  const bg = v.bgColor2 && v.bgColor2.toLowerCase() !== v.bgColor.toLowerCase()
     ? `linear-gradient(135deg, ${v.bgColor}, ${v.bgColor2})`
     : v.bgColor;
 
-  const target = v.openNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
-  const safeLink = escapeAttr(v.link || "#");
+  const scale = Math.min(width / 1200, height / 300, 2);
+  const titleSize = Math.max(1.4, Math.min(4, 2.2 * scale));
+  const subSize = Math.max(0.8, Math.min(1.8, 1.1 * scale));
+
+  return { width, height, radius, align, bg, scale, titleSize, subSize };
+}
+
+function buildBannerHtml(v, forExport = false) {
+  const s = buildBannerStyles(v);
 
   const containerStyle = [
-    `background:${bg}`,
+    `background:${s.bg}`,
     `color:${v.textColor}`,
-    `border-radius:${radius}px`,
-    `min-height:${height}px`,
-    `padding:28px`,
+    `border-radius:${s.radius}px`,
+    `width:${s.width}px`,
+    `height:${s.height}px`,
+    `padding:${Math.max(20, s.height * 0.08)}px`,
     `display:flex`,
     `gap:24px`,
     `align-items:center`,
-    align === "center" ? "justify-content:center;flex-direction:column;text-align:center"
-      : align === "right" ? "justify-content:flex-end;text-align:right"
+    s.align === "center" ? "justify-content:center;flex-direction:column;text-align:center"
+      : s.align === "right" ? "justify-content:flex-end;text-align:right"
       : "justify-content:flex-start;text-align:left",
     `font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif`,
-    `overflow:hidden`
+    `overflow:hidden`,
+    `box-sizing:border-box`
   ].join(";");
 
-  const linkStyle = "display:block;text-decoration:none;color:inherit;";
+  const linkStyle = "display:inline-block;text-decoration:none;color:inherit;";
 
   const image = v.imageUrl
-    ? `<img src="${escapeAttr(v.imageUrl)}" alt="" style="max-height:${height - 40}px;max-width:200px;border-radius:8px;object-fit:cover;" />`
+    ? `<img src="${escapeHtml(v.imageUrl)}" alt="" crossorigin="anonymous" style="max-height:${s.height * 0.7}px;max-width:35%;border-radius:8px;object-fit:contain;" />`
     : "";
 
   const buttonStyle = [
     `display:inline-block`,
-    `padding:10px 18px`,
-    `border-radius:8px`,
+    `padding:${Math.max(8, s.height * 0.04)}px ${Math.max(16, s.height * 0.08)}px`,
+    `border-radius:10px`,
     `background:${v.buttonColor}`,
     `color:${v.buttonTextColor}`,
-    `font-weight:600`,
-    `font-size:0.95rem`,
+    `font-weight:700`,
+    `font-size:${Math.max(0.9, s.subSize)}rem`,
     `text-decoration:none`,
     `margin-top:6px`
   ].join(";");
 
+  const websiteHtml = v.showWebsite && v.website
+    ? `<div style="margin-top:14px;font-size:${Math.max(0.85, s.subSize * 0.9)}rem;font-weight:600;letter-spacing:0.5px;opacity:0.95;">🔗 ${escapeHtml(v.website)}</div>`
+    : "";
+
   const content = `
-    <div class="banner-content">
-      <h3 style="margin:0 0 8px;font-size:1.8rem;font-weight:700;">${escapeHtml(v.title)}</h3>
-      <p style="margin:0 0 14px;font-size:1rem;opacity:0.95;">${escapeHtml(v.subtitle)}</p>
+    <div class="banner-content" style="max-width:100%;">
+      <div style="margin:0 0 10px;font-size:${s.titleSize}rem;font-weight:800;line-height:1.1;">${escapeHtml(v.title)}</div>
+      <div style="margin:0 0 16px;font-size:${s.subSize}rem;opacity:0.95;">${escapeHtml(v.subtitle)}</div>
       <span style="${buttonStyle}">${escapeHtml(v.buttonText)}</span>
+      ${websiteHtml}
     </div>
   `.trim();
 
-  return `<a href="${safeLink}"${target} style="${linkStyle}">
-  <div style="${containerStyle}">
-    ${image}
-    ${content}
-  </div>
-</a>`;
+  const inner = `<div style="${containerStyle}">${image}${content}</div>`;
+
+  if (forExport) {
+    // For HTML embed (web use): wrapped in clickable <a>
+    const target = v.openNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
+    const safeLink = escapeHtml(v.link || "#");
+    return `<a href="${safeLink}"${target} style="${linkStyle}">\n  ${inner}\n</a>`;
+  }
+  return inner;
 }
 
 function render() {
   const v = getValues();
-  const html = buildBannerHtml(v);
-  preview.innerHTML = html;
-  output.value = html;
+  preview.innerHTML = buildBannerHtml(v, false);
+  output.value = buildBannerHtml(v, true);
 }
 
 for (const id of fields) {
@@ -106,13 +120,14 @@ for (const id of fields) {
   el.addEventListener("change", render);
 }
 
+/* ---------- Presets ---------- */
 const presets = {
   ma: {
     bgColor: "#000000", bgColor2: "#84cc16",
     textColor: "#ffffff", buttonColor: "#84cc16", buttonTextColor: "#000000",
     title: "M&A Market Store",
     subtitle: "Minimarket · Cigarrillos electrónicos · Bebidas · Snacks",
-    buttonText: "Visitar tienda"
+    buttonText: "Visitá nuestra tienda"
   },
   neon: {
     bgColor: "#0f172a", bgColor2: "#22d3ee",
@@ -128,28 +143,78 @@ const presets = {
   }
 };
 
+const sizes = {
+  "ig-post":   { width: 1080, height: 1080, align: "center" },
+  "ig-story":  { width: 1080, height: 1920, align: "center" },
+  "fb-post":   { width: 1200, height: 630,  align: "center" },
+  "tw-header": { width: 1500, height: 500,  align: "center" },
+  "web":       { width: 1200, height: 300,  align: "left"   }
+};
+
 document.querySelectorAll(".preset").forEach(btn => {
   btn.addEventListener("click", () => {
-    const p = presets[btn.dataset.preset];
-    if (!p) return;
-    for (const [k, val] of Object.entries(p)) {
-      const el = document.getElementById(k);
-      if (el) el.value = val;
+    if (btn.dataset.preset) {
+      const p = presets[btn.dataset.preset];
+      if (p) {
+        for (const [k, val] of Object.entries(p)) {
+          const el = document.getElementById(k);
+          if (el) el.value = val;
+        }
+      }
+    }
+    if (btn.dataset.size) {
+      const s = sizes[btn.dataset.size];
+      if (s) {
+        for (const [k, val] of Object.entries(s)) {
+          const el = document.getElementById(k);
+          if (el) el.value = val;
+        }
+      }
     }
     render();
   });
 });
 
+/* ---------- Copy HTML ---------- */
 copyBtn.addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(output.value);
-    copyStatus.textContent = "¡Copiado!";
+    statusEl.textContent = "✓ HTML copiado al portapapeles";
   } catch {
     output.select();
     document.execCommand("copy");
-    copyStatus.textContent = "Copiado (fallback)";
+    statusEl.textContent = "✓ Copiado";
   }
-  setTimeout(() => (copyStatus.textContent = ""), 2000);
+  setTimeout(() => (statusEl.textContent = ""), 2500);
+});
+
+/* ---------- Download PNG ---------- */
+downloadBtn.addEventListener("click", async () => {
+  if (typeof html2canvas === "undefined") {
+    statusEl.textContent = "Error: librería de descarga no cargada";
+    return;
+  }
+  statusEl.textContent = "Generando imagen...";
+  const node = preview.firstElementChild;
+  try {
+    const canvas = await html2canvas(node, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      logging: false
+    });
+    const link = document.createElement("a");
+    const title = document.getElementById("title").value
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "banner";
+    link.download = `${title}-${Date.now()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    statusEl.textContent = "✓ PNG descargado";
+  } catch (e) {
+    statusEl.textContent = "Error al generar PNG (¿imagen externa sin CORS?)";
+    console.error(e);
+  }
+  setTimeout(() => (statusEl.textContent = ""), 3500);
 });
 
 render();
