@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Generador de Banners</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <h1>Generador de Banners</h1>
+  <p>Edita el banner en vivo. El link es clickeable, no se genera PNG.</p>
+</header>
+
+<main class="layout">
+  <section class="editor">
+    <h2>Editor</h2>
+
+    <label>Título
+      <input type="text" id="title" value="Mi Banner Increíble" />
+    </label>
+
+    <label>Subtítulo
+      <input type="text" id="subtitle" value="Haz click para visitar la página" />
+    </label>
+
+    <label>Texto del botón
+      <input type="text" id="buttonText" value="Visitar página" />
+    </label>
+
+    <label>Link (URL a la que lleva el banner)
+      <input type="url" id="link" value="https://example.com" placeholder="https://..." />
+    </label>
+
+    <label>Color de fondo
+      <input type="color" id="bgColor" value="#1e3a8a" />
+    </label>
+
+    <label>Color del degradado (opcional)
+      <input type="color" id="bgColor2" value="#9333ea" />
+    </label>
+
+    <label>Color del texto
+      <input type="color" id="textColor" value="#ffffff" />
+    </label>
+
+    <label>Color del botón
+      <input type="color" id="buttonColor" value="#facc15" />
+    </label>
+
+    <label>Color del texto del botón
+      <input type="color" id="buttonTextColor" value="#000000" />
+    </label>
+
+    <label>URL de imagen (opcional)
+      <input type="url" id="imageUrl" placeholder="https://.../imagen.png" />
+    </label>
+
+    <label>Alineación
+      <select id="align">
+        <option value="left">Izquierda</option>
+        <option value="center" selected>Centrado</option>
+        <option value="right">Derecha</option>
+      </select>
+    </label>
+
+    <label>Alto del banner (px)
+      <input type="number" id="height" value="220" min="80" max="600" />
+    </label>
+
+    <label>Radio de bordes (px)
+      <input type="number" id="radius" value="16" min="0" max="60" />
+    </label>
+
+    <label class="checkbox">
+      <input type="checkbox" id="openNewTab" checked />
+      Abrir link en nueva pestaña
+    </label>
+  </section>
+
+  <section class="preview-area">
+    <h2>Vista previa (click en el banner para ir al link)</h2>
+    <div id="preview"></div>
+
+    <h2>Código HTML (cópialo y pégalo donde quieras)</h2>
+    <textarea id="output" readonly rows="10"></textarea>
+    <button id="copyBtn" type="button">Copiar HTML</button>
+    <span id="copyStatus" class="status"></span>
+  </section>
+</main>
+
+<footer class="footer">
+  <small>Generado en el navegador. Sin PNG: el banner es HTML y el link es clickeable.</small>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
