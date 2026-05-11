@@ -1,7 +1,7 @@
 const fields = [
   "title", "subtitle", "buttonText", "link", "website",
   "bgColor", "bgColor2", "textColor", "buttonColor", "buttonTextColor",
-  "imageUrl", "align", "width", "height", "radius", "openNewTab", "showWebsite"
+  "imageUrl", "align", "width", "height", "radius", "openNewTab", "showWebsite", "glow"
 ];
 
 const preview = document.getElementById("preview");
@@ -84,15 +84,18 @@ function buildBannerHtml(v, forExport = false) {
     `margin-top:6px`
   ].join(";");
 
+  const glowText = v.glow ? `text-shadow:0 0 6px ${v.textColor},0 0 14px ${v.bgColor2 || v.buttonColor},0 0 24px ${v.bgColor2 || v.buttonColor};` : "";
+  const glowBtn  = v.glow ? `box-shadow:0 0 10px ${v.buttonColor},0 0 24px ${v.buttonColor};` : "";
+
   const websiteHtml = v.showWebsite && v.website
-    ? `<div style="margin-top:14px;font-size:${Math.max(0.85, s.subSize * 0.9)}rem;font-weight:600;letter-spacing:0.5px;opacity:0.95;">🔗 ${escapeHtml(v.website)}</div>`
+    ? `<div style="margin-top:14px;font-size:${Math.max(0.85, s.subSize * 0.9)}rem;font-weight:600;letter-spacing:0.5px;opacity:0.95;${glowText}">🔗 ${escapeHtml(v.website)}</div>`
     : "";
 
   const content = `
     <div class="banner-content" style="max-width:100%;">
-      <div style="margin:0 0 10px;font-size:${s.titleSize}rem;font-weight:800;line-height:1.1;">${escapeHtml(v.title)}</div>
-      <div style="margin:0 0 16px;font-size:${s.subSize}rem;opacity:0.95;">${escapeHtml(v.subtitle)}</div>
-      <span style="${buttonStyle}">${escapeHtml(v.buttonText)}</span>
+      <div style="margin:0 0 10px;font-size:${s.titleSize}rem;font-weight:800;line-height:1.1;${glowText}">${escapeHtml(v.title)}</div>
+      <div style="margin:0 0 16px;font-size:${s.subSize}rem;opacity:0.95;${glowText}">${escapeHtml(v.subtitle)}</div>
+      <span style="${buttonStyle}${glowBtn}">${escapeHtml(v.buttonText)}</span>
       ${websiteHtml}
     </div>
   `.trim();
@@ -127,11 +130,43 @@ const presets = {
     textColor: "#ffffff", buttonColor: "#84cc16", buttonTextColor: "#000000",
     title: "M&A Market Store",
     subtitle: "Minimarket · Cigarrillos electrónicos · Bebidas · Snacks",
-    buttonText: "Visitá nuestra tienda"
+    buttonText: "Visitá nuestra tienda",
+    glow: false
   },
-  neon: {
-    bgColor: "#0f172a", bgColor2: "#22d3ee",
-    textColor: "#ffffff", buttonColor: "#f472b6", buttonTextColor: "#0f172a"
+  "ma-neon": {
+    bgColor: "#020617", bgColor2: "#39ff14",
+    textColor: "#39ff14", buttonColor: "#39ff14", buttonTextColor: "#000000",
+    glow: true
+  },
+  "neon-pink": {
+    bgColor: "#0a0014", bgColor2: "#ff10f0",
+    textColor: "#ffffff", buttonColor: "#ff10f0", buttonTextColor: "#000000",
+    glow: true
+  },
+  "neon-cyan": {
+    bgColor: "#001018", bgColor2: "#00ffff",
+    textColor: "#ffffff", buttonColor: "#00ffff", buttonTextColor: "#001018",
+    glow: true
+  },
+  "neon-lime": {
+    bgColor: "#0d1b00", bgColor2: "#ccff00",
+    textColor: "#ccff00", buttonColor: "#ccff00", buttonTextColor: "#000000",
+    glow: true
+  },
+  "neon-purple": {
+    bgColor: "#1a002e", bgColor2: "#bf00ff",
+    textColor: "#ffffff", buttonColor: "#bf00ff", buttonTextColor: "#ffffff",
+    glow: true
+  },
+  "neon-sunset": {
+    bgColor: "#ff006e", bgColor2: "#ffbe0b",
+    textColor: "#ffffff", buttonColor: "#000000", buttonTextColor: "#ffbe0b",
+    glow: true
+  },
+  vapor: {
+    bgColor: "#ff71ce", bgColor2: "#01cdfe",
+    textColor: "#ffffff", buttonColor: "#05ffa1", buttonTextColor: "#1a002e",
+    glow: true
   },
   fire: {
     bgColor: "#dc2626", bgColor2: "#facc15",
@@ -144,32 +179,38 @@ const presets = {
 };
 
 const sizes = {
-  "ig-post":   { width: 1080, height: 1080, align: "center" },
-  "ig-story":  { width: 1080, height: 1920, align: "center" },
-  "fb-post":   { width: 1200, height: 630,  align: "center" },
-  "tw-header": { width: 1500, height: 500,  align: "center" },
-  "web":       { width: 1200, height: 300,  align: "left"   }
+  "ig-post":     { width: 1080, height: 1080, align: "center", label: "instagram-post" },
+  "ig-story":    { width: 1080, height: 1920, align: "center", label: "instagram-story" },
+  "ig-reel":     { width: 1080, height: 1920, align: "center", label: "instagram-reel" },
+  "fb-post":     { width: 1200, height: 630,  align: "center", label: "facebook-post" },
+  "fb-cover":    { width: 1640, height: 624,  align: "center", label: "facebook-portada" },
+  "tw-post":     { width: 1600, height: 900,  align: "center", label: "twitter-post" },
+  "tw-header":   { width: 1500, height: 500,  align: "center", label: "twitter-header" },
+  "tiktok":      { width: 1080, height: 1920, align: "center", label: "tiktok" },
+  "yt-thumb":    { width: 1280, height: 720,  align: "center", label: "youtube-thumb" },
+  "wsp-status":  { width: 1080, height: 1920, align: "center", label: "whatsapp-status" },
+  "linkedin":    { width: 1200, height: 627,  align: "center", label: "linkedin" },
+  "web":         { width: 1200, height: 300,  align: "left",   label: "web-banner" }
 };
+
+function applyConfig(obj) {
+  for (const [k, val] of Object.entries(obj)) {
+    const el = document.getElementById(k);
+    if (!el) continue;
+    if (el.type === "checkbox") el.checked = !!val;
+    else el.value = val;
+  }
+}
 
 document.querySelectorAll(".preset").forEach(btn => {
   btn.addEventListener("click", () => {
     if (btn.dataset.preset) {
       const p = presets[btn.dataset.preset];
-      if (p) {
-        for (const [k, val] of Object.entries(p)) {
-          const el = document.getElementById(k);
-          if (el) el.value = val;
-        }
-      }
+      if (p) applyConfig(p);
     }
     if (btn.dataset.size) {
       const s = sizes[btn.dataset.size];
-      if (s) {
-        for (const [k, val] of Object.entries(s)) {
-          const el = document.getElementById(k);
-          if (el) el.value = val;
-        }
-      }
+      if (s) applyConfig(s);
     }
     render();
   });
@@ -189,32 +230,101 @@ copyBtn.addEventListener("click", async () => {
 });
 
 /* ---------- Download PNG ---------- */
-downloadBtn.addEventListener("click", async () => {
+function slugTitle() {
+  return document.getElementById("title").value
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "banner";
+}
+
+async function captureNode(node) {
+  return html2canvas(node, {
+    backgroundColor: null,
+    scale: 2,
+    useCORS: true,
+    logging: false
+  });
+}
+
+function triggerDownload(canvas, filename) {
+  const link = document.createElement("a");
+  link.download = filename;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+async function downloadCurrent() {
   if (typeof html2canvas === "undefined") {
     statusEl.textContent = "Error: librería de descarga no cargada";
     return;
   }
   statusEl.textContent = "Generando imagen...";
-  const node = preview.firstElementChild;
   try {
-    const canvas = await html2canvas(node, {
-      backgroundColor: null,
-      scale: 2,
-      useCORS: true,
-      logging: false
-    });
-    const link = document.createElement("a");
-    const title = document.getElementById("title").value
-      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "banner";
-    link.download = `${title}-${Date.now()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    const canvas = await captureNode(preview.firstElementChild);
+    triggerDownload(canvas, `${slugTitle()}-${Date.now()}.png`);
     statusEl.textContent = "✓ PNG descargado";
   } catch (e) {
     statusEl.textContent = "Error al generar PNG (¿imagen externa sin CORS?)";
     console.error(e);
   }
   setTimeout(() => (statusEl.textContent = ""), 3500);
+}
+
+async function downloadForSize(sizeKey) {
+  const sz = sizes[sizeKey];
+  if (!sz) return;
+  const prev = {
+    width: document.getElementById("width").value,
+    height: document.getElementById("height").value,
+    align: document.getElementById("align").value
+  };
+  applyConfig(sz);
+  render();
+  await new Promise(r => setTimeout(r, 80));
+  try {
+    statusEl.textContent = `Generando ${sz.label}...`;
+    const canvas = await captureNode(preview.firstElementChild);
+    triggerDownload(canvas, `${slugTitle()}-${sz.label}.png`);
+    statusEl.textContent = `✓ ${sz.label} descargado`;
+  } catch (e) {
+    statusEl.textContent = "Error al generar PNG";
+    console.error(e);
+  } finally {
+    applyConfig(prev);
+    render();
+  }
+  setTimeout(() => (statusEl.textContent = ""), 3500);
+}
+
+async function downloadAll() {
+  const prev = {
+    width: document.getElementById("width").value,
+    height: document.getElementById("height").value,
+    align: document.getElementById("align").value
+  };
+  const keys = Object.keys(sizes);
+  for (let i = 0; i < keys.length; i++) {
+    const sz = sizes[keys[i]];
+    statusEl.textContent = `Descargando ${i + 1}/${keys.length}: ${sz.label}...`;
+    applyConfig(sz);
+    render();
+    await new Promise(r => setTimeout(r, 120));
+    try {
+      const canvas = await captureNode(preview.firstElementChild);
+      triggerDownload(canvas, `${slugTitle()}-${sz.label}.png`);
+      await new Promise(r => setTimeout(r, 250));
+    } catch (e) {
+      console.error(`Error en ${sz.label}`, e);
+    }
+  }
+  applyConfig(prev);
+  render();
+  statusEl.textContent = "✓ Pack completo descargado";
+  setTimeout(() => (statusEl.textContent = ""), 4000);
+}
+
+downloadBtn.addEventListener("click", downloadCurrent);
+document.getElementById("downloadAllBtn").addEventListener("click", downloadAll);
+document.querySelectorAll(".dl-social").forEach(btn => {
+  btn.addEventListener("click", () => downloadForSize(btn.dataset.size));
 });
 
 render();

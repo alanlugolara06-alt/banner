@@ -20,7 +20,13 @@
     <div class="presets">
       <strong>Estilos:</strong>
       <button type="button" class="preset" data-preset="ma">M&amp;A Market</button>
-      <button type="button" class="preset" data-preset="neon">Neón</button>
+      <button type="button" class="preset" data-preset="ma-neon">M&amp;A Neón</button>
+      <button type="button" class="preset" data-preset="neon-pink">Neón Rosa</button>
+      <button type="button" class="preset" data-preset="neon-cyan">Neón Cian</button>
+      <button type="button" class="preset" data-preset="neon-lime">Neón Lima</button>
+      <button type="button" class="preset" data-preset="neon-purple">Neón Púrpura</button>
+      <button type="button" class="preset" data-preset="neon-sunset">Neón Sunset</button>
+      <button type="button" class="preset" data-preset="vapor">Vaporwave</button>
       <button type="button" class="preset" data-preset="fire">Fuego</button>
       <button type="button" class="preset" data-preset="ocean">Océano</button>
     </div>
@@ -107,6 +113,11 @@
       <input type="checkbox" id="showWebsite" checked />
       Mostrar URL del sitio web en el banner
     </label>
+
+    <label class="checkbox">
+      <input type="checkbox" id="glow" />
+      Efecto neón (brillo en textos)
+    </label>
   </section>
 
   <section class="preview-area">
@@ -117,9 +128,28 @@
     </div>
 
     <div class="actions">
-      <button id="downloadBtn" type="button" class="primary">📥 Descargar PNG (para redes)</button>
+      <button id="downloadBtn" type="button" class="primary">📥 Descargar PNG (tamaño actual)</button>
       <button id="copyBtn" type="button">📋 Copiar HTML (para web)</button>
       <span id="status" class="status"></span>
+    </div>
+
+    <div class="download-grid">
+      <strong>Descargar para una red específica:</strong>
+      <div class="download-buttons">
+        <button type="button" class="dl-social" data-size="ig-post">📷 Instagram Post<br><small>1080×1080</small></button>
+        <button type="button" class="dl-social" data-size="ig-story">📱 Instagram Story<br><small>1080×1920</small></button>
+        <button type="button" class="dl-social" data-size="ig-reel">🎬 Instagram Reel<br><small>1080×1920</small></button>
+        <button type="button" class="dl-social" data-size="fb-post">👍 Facebook Post<br><small>1200×630</small></button>
+        <button type="button" class="dl-social" data-size="fb-cover">🖼️ Facebook Portada<br><small>1640×624</small></button>
+        <button type="button" class="dl-social" data-size="tw-post">🐦 Twitter/X Post<br><small>1600×900</small></button>
+        <button type="button" class="dl-social" data-size="tw-header">📰 Twitter/X Header<br><small>1500×500</small></button>
+        <button type="button" class="dl-social" data-size="tiktok">🎵 TikTok<br><small>1080×1920</small></button>
+        <button type="button" class="dl-social" data-size="yt-thumb">▶️ YouTube Thumbnail<br><small>1280×720</small></button>
+        <button type="button" class="dl-social" data-size="wsp-status">💬 WhatsApp Status<br><small>1080×1920</small></button>
+        <button type="button" class="dl-social" data-size="linkedin">💼 LinkedIn<br><small>1200×627</small></button>
+        <button type="button" class="dl-social" data-size="web">🌐 Web Banner<br><small>1200×300</small></button>
+      </div>
+      <button id="downloadAllBtn" type="button" class="primary-alt">⬇️ Descargar pack completo (todos los tamaños)</button>
     </div>
 
     <details>

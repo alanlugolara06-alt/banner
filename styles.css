@@ -148,6 +148,60 @@ body {
 }
 .primary:hover { background: #65a30d !important; }
 
+.primary-alt {
+  background: #000 !important;
+  color: #84cc16 !important;
+  border: 2px solid #84cc16 !important;
+  width: 100%;
+  margin-top: 8px;
+}
+.primary-alt:hover { background: #84cc16 !important; color: #000 !important; }
+
+.download-grid {
+  margin: 16px 0;
+  padding: 14px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+.download-grid strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+  color: #111827;
+}
+.download-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dl-social {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.3;
+  transition: all 0.15s;
+}
+.dl-social small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.dl-social:hover {
+  background: #84cc16;
+  border-color: #84cc16;
+  color: #000;
+  transform: translateY(-1px);
+}
+
 .status {
   font-size: 0.85rem;
   color: #16a34a;
